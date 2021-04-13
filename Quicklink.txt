@@ -1,0 +1,763 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+  <QuickLink action="viewCertifications" category="Tasks" created="1603302491978" cssClass="quicklink-access-reviews" id="0a111e58754c15ea81754c46874a012a" messageKey="quicklink_access_reviews" name="Access Reviews">
+    <Attributes>
+      <Map>
+        <entry key="displayText" value="true"/>
+        <entry key="textAriaLabel" value="quicklink_access_reviews_text_aria_label"/>
+        <entry key="textScript">
+          <value>
+            <Script>
+              <Source>
+                
+                  import sailpoint.object.Certification;
+                  import sailpoint.object.Filter;
+                  import sailpoint.object.QueryOptions;
+                  import sailpoint.service.certification.CertificationListService;                                    
+                  
+                  QueryOptions qo = new QueryOptions();
+                  qo.addFilter(CertificationListService.getMyCertificationsFilter(currentUser, false));
+
+                  return context.countObjects(Certification.class, qo);
+                
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Description>quicklink_access_reviews_desc</Description>
+  </QuickLink>
+  <QuickLink action="viewCertifications" category="Tasks" created="1603302491997" cssClass="quicklink-access-reviews" hidden="true" id="0a111e58754c15ea81754c46875d012c" messageKey="quicklink_access_reviews" name="Mobile Access Reviews">
+    <Attributes>
+      <Map>
+        <entry key="displayText" value="true"/>
+        <entry key="textAriaLabel" value="quicklink_access_reviews_text_aria_label"/>
+        <entry key="textScript">
+          <value>
+            <Script>
+              <Source>
+                
+                  import sailpoint.object.Certification;
+                  import sailpoint.object.Filter;
+                  import sailpoint.object.QueryOptions;
+                  import sailpoint.service.certification.CertificationListService;                                    
+                  
+                  QueryOptions qo = new QueryOptions();
+                  qo.addFilter(CertificationListService.getMyCertificationsFilter(currentUser, true));
+
+                  return context.countObjects(Certification.class, qo);
+                
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Description>quicklink_access_reviews_desc</Description>
+    <QuickLinkOptions allowSelf="true" created="1603302491997" id="0a111e58754c15ea81754c46875d012d">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58754c15ea81754c4687380129" name="Everyone"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="viewApprovals" category="Tasks" created="1603302492004" cssClass="quicklink-approvals" id="0a111e58754c15ea81754c468764012e" messageKey="quicklink_approvals" name="Approvals">
+    <Attributes>
+      <Map>
+        <entry key="displayText" value="true"/>
+        <entry key="textAriaLabel" value="quicklink_approvals_text_aria_label"/>
+        <entry key="textScript">
+          <value>
+            <Script>
+              <Source>
+                          
+                            import sailpoint.object.WorkItem;
+                            import sailpoint.object.QueryOptions;
+                            import sailpoint.object.Filter;
+                            import java.util.List;
+                            import java.util.ArrayList;
+          
+                            QueryOptions qo = new QueryOptions();
+                            List filters = new ArrayList();
+
+                            filters.add(Filter.eq("owner", currentUser));
+                                   
+                            if (currentUser.getWorkgroups() != null &amp;&amp; !currentUser.getWorkgroups().isEmpty())
+                            {
+                              filters.add(Filter.in("owner", currentUser.getWorkgroups()));
+                            }    
+
+                            qo.addFilter(Filter.eq("type", "Approval"));
+                            qo.addFilter(Filter.or(filters));
+          
+                            int count = context.countObjects(WorkItem.class, qo);
+                            return count;
+                          
+                            </Source>
+            </Script>
+          </value>
+        </entry>
+        <entry key="workItemType" value="Approval"/>
+      </Map>
+    </Attributes>
+    <Description>quicklink_approvals_desc</Description>
+    <QuickLinkOptions allowSelf="true" created="1616590625336" id="0a111e5c785d172f8178644f5a381c72">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58754c15ea81754c4687380129" name="Everyone"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="manageWorkItems" category="Tasks" created="1603302492013" cssClass="quicklink-approvals" hidden="true" id="0a111e58754c15ea81754c46876c0130" messageKey="quicklink_approvals" name="Mobile Approvals">
+    <Attributes>
+      <Map>
+        <entry key="displayText" value="true"/>
+        <entry key="textAriaLabel" value="quicklink_approvals_text_aria_label"/>
+        <entry key="textScript">
+          <value>
+            <Script>
+              <Source>
+                  
+                    import sailpoint.object.WorkItem;
+                    import sailpoint.object.QueryOptions;
+                    import sailpoint.object.Filter;
+                    import java.util.List;
+                    import java.util.ArrayList;
+  
+                    QueryOptions qo = new QueryOptions();
+                    List filters = new ArrayList();
+
+                    filters.add(Filter.eq("owner", currentUser));
+                           
+                    if (currentUser.getWorkgroups() != null &amp;&amp; !currentUser.getWorkgroups().isEmpty())
+                    {
+                      filters.add(Filter.in("owner", currentUser.getWorkgroups()));
+                    }    
+
+                    //Join to IdentityRequest table for type filter
+                    List identityRequestTypes = new ArrayList();
+                    identityRequestTypes.add("AccessRequest");
+                    identityRequestTypes.add("AccountsRequest");
+                    qo.addFilter(Filter.join("identityRequestId", "IdentityRequest.name"));
+                    qo.addFilter(Filter.in("IdentityRequest.type", identityRequestTypes));  
+                    qo.addFilter(Filter.eq("type", "Approval"));
+                    qo.addFilter(Filter.or(filters));
+  
+                    int count = context.countObjects(WorkItem.class, qo);
+                    return count;
+                  
+                </Source>
+            </Script>
+          </value>
+        </entry>
+        <entry key="workItemType" value="Approval"/>
+      </Map>
+    </Attributes>
+    <QuickLinkOptions allowSelf="true" created="1603302492013" id="0a111e58754c15ea81754c46876d0131">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58754c15ea81754c4687380129" name="Everyone"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="manageWorkItems" category="Tasks" created="1603302492023" cssClass="quicklink-forms" id="0a111e58754c15ea81754c4687770132" messageKey="quicklink_forms" name="Forms">
+    <Attributes>
+      <Map>
+        <entry key="displayText" value="true"/>
+        <entry key="textAriaLabel" value="quicklink_forms_text_aria_label"/>
+        <entry key="textScript">
+          <value>
+            <Script>
+              <Source>
+                  
+                    import sailpoint.object.WorkItem;
+                    import sailpoint.object.QueryOptions;
+                    import sailpoint.object.Filter;
+                    import java.util.List;
+                    import java.util.ArrayList;
+
+                    QueryOptions qo = new QueryOptions();
+                    List filters = new ArrayList();
+
+                    filters.add(Filter.eq("owner", currentUser));
+
+                    if (currentUser.getWorkgroups() != null &amp;&amp; !currentUser.getWorkgroups().isEmpty())
+                    {
+                        filters.add(Filter.in("owner", currentUser.getWorkgroups()));
+                    }
+
+                    qo.addFilter(Filter.eq("type", "Form"));
+                    qo.addFilter(Filter.or(filters));
+
+                    int count = context.countObjects(WorkItem.class, qo);
+                    return count;
+                  
+                </Source>
+            </Script>
+          </value>
+        </entry>
+        <entry key="workItemType" value="Form"/>
+      </Map>
+    </Attributes>
+  </QuickLink>
+  <QuickLink action="manageWorkItems" category="Tasks" created="1603302492030" cssClass="quicklink-signoffs" id="0a111e58754c15ea81754c46877e0134" messageKey="quicklink_signoffs" name="Signoffs">
+    <Attributes>
+      <Map>
+        <entry key="displayText" value="true"/>
+        <entry key="textAriaLabel" value="quicklink_signoffs_text_aria_label"/>
+        <entry key="textScript">
+          <value>
+            <Script>
+              <Source>
+                          
+                            import sailpoint.object.WorkItem;
+                            import sailpoint.object.QueryOptions;
+                            import sailpoint.object.Filter;
+                            import java.util.List;
+                            import java.util.ArrayList;
+          
+                            QueryOptions qo = new QueryOptions();
+                            List filters = new ArrayList();
+
+                            filters.add(Filter.eq("owner", currentUser));
+                                   
+                            if (currentUser.getWorkgroups() != null &amp;&amp; !currentUser.getWorkgroups().isEmpty())
+                            {
+                              filters.add(Filter.in("owner", currentUser.getWorkgroups()));
+                            }    
+
+                            qo.addFilter(Filter.eq("type", "Signoff"));
+                            qo.addFilter(Filter.or(filters));
+          
+                            int count = context.countObjects(WorkItem.class, qo);
+                            return count;
+                          
+                            </Source>
+            </Script>
+          </value>
+        </entry>
+        <entry key="workItemType" value="Signoff"/>
+      </Map>
+    </Attributes>
+    <Description>quicklink_signoffs_desc</Description>
+  </QuickLink>
+  <QuickLink action="manageWorkItems" category="Tasks" created="1603302492039" cssClass="quicklink-work-items" id="0a111e58754c15ea81754c4687870136" messageKey="quicklink_work_items" name="Work Items">
+    <Attributes>
+      <Map>
+        <entry key="displayText" value="true"/>
+        <entry key="labelScript">
+          <value>
+            <Script>
+              <Source>
+                      
+                        return "quicklink_work_items_label_notifications";
+                      
+                    </Source>
+            </Script>
+          </value>
+        </entry>
+        <entry key="textAriaLabel" value="quicklink_work_items_text_aria_label"/>
+        <entry key="textScript">
+          <value>
+            <Script>
+              <Source>
+                          
+                            import sailpoint.object.WorkItem;
+                            import sailpoint.object.QueryOptions;
+                            import sailpoint.object.Filter;
+                            import java.util.List;
+                            import java.util.ArrayList;
+          
+                            QueryOptions qo = new QueryOptions();
+                            List filters = new ArrayList();
+
+                            filters.add(Filter.eq("owner", currentUser));
+                                   
+                            if (currentUser.getWorkgroups() != null &amp;&amp; !currentUser.getWorkgroups().isEmpty())
+                            {
+                              filters.add(Filter.in("owner", currentUser.getWorkgroups()));
+                            }    
+
+                            qo.addFilter(Filter.or(filters));
+          
+                            int count = context.countObjects(WorkItem.class, qo);
+                            return count;
+                          
+                            </Source>
+            </Script>
+          </value>
+        </entry>
+        <entry key="workItemType" value="all"/>
+      </Map>
+    </Attributes>
+    <Description>quicklink_work_items_desc</Description>
+    <QuickLinkOptions allowSelf="true" created="1616590625336" id="0a111e5c785d172f8178644f5a381c73">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58754c15ea81754c4687380129" name="Everyone"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="listViolations" category="Tasks" created="1603302492046" cssClass="quicklink-policy-violations" id="0a111e58754c15ea81754c46878e0138" messageKey="quicklink_policy_violations" name="Policy Violations">
+    <Attributes>
+      <Map>
+        <entry key="displayText" value="true"/>
+        <entry key="ownerId">
+          <value>
+            <Script>
+              <Source>
+                              return currentUser.getId();
+                          </Source>
+            </Script>
+          </value>
+        </entry>
+        <entry key="textScript">
+          <value>
+            <Script>
+              <Source>
+                              
+                              import sailpoint.object.PolicyViolation;
+                              import sailpoint.object.QueryOptions;
+                              import sailpoint.object.Filter;
+                              import sailpoint.object.Identity;
+                              import java.util.List;
+                              import java.util.ArrayList;
+                              import java.util.Iterator;
+                              import sailpoint.object.WorkItem;
+
+                              QueryOptions qo = new QueryOptions();
+                              List filters = new ArrayList();
+
+                              filters.add(Filter.eq("owner", currentUser));
+
+                              if (currentUser.getWorkgroups() != null &amp;&amp; !currentUser.getWorkgroups().isEmpty())
+                              {
+                                filters.add(Filter.in("owner", currentUser.getWorkgroups()));
+                              }
+
+                              List&lt;String> delegatedViolationIds = new ArrayList();
+                              qo.add(Filter.eq("type", WorkItem.Type.Delegation));
+                              qo.add(Filter.or(filters));
+                              Iterator iter = context.search(WorkItem.class, qo, "targetId");
+                              while (iter.hasNext()) {
+                                  delegatedViolationIds.add((String) iter.next()[0]);
+                              }
+
+                              if (!delegatedViolationIds.isEmpty())
+                              {
+                                  filters.add(Filter.in("id", delegatedViolationIds));
+                              }
+                              qo = new QueryOptions();
+                              qo.addFilter(Filter.or(filters));
+                              qo.addFilter(Filter.or(Filter.eq("status", PolicyViolation.Status.Open), Filter.eq("status", PolicyViolation.Status.Delegated)));
+                              qo.addFilter(Filter.eq("active", Boolean.TRUE));
+                              int count =
+                              context.countObjects(PolicyViolation.class, qo);
+                              return count;
+                              
+                          </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Description>quicklink_policy_violations_desc</Description>
+  </QuickLink>
+  <QuickLink action="workflow" category="CareFirst" created="1614259153351" id="0a111e5877c419108177d957e9c73e88" messageKey="Request Disconnected Application" modified="1614261049515" name="Request Disconnected Application" ordering="2">
+    <Attributes>
+      <Map>
+        <entry key="workflowName" value="CF-DisconnectedAPP-Workflow"/>
+      </Map>
+    </Attributes>
+  </QuickLink>
+  <QuickLink action="workflow" category="Manage Disconnected Application" created="1610702052449" id="0a111e5877c4191081780162f39129a2" messageKey="Update Native Identity" modified="1615374796622" name="CF-Disconnetcted-Application">
+    <Attributes>
+      <Map>
+        <entry key="workflowName" value="CF-Workflow-DisconnectedApplication-NativeIdentity"/>
+      </Map>
+    </Attributes>
+    <QuickLinkOptions allowSelf="true" created="1615208852717" id="0a111e5c77a51bf3817811f32ced229d" modified="1615374796622">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5877c4191081781bd68b7a3d8c" name="Information Security Provisioning Workgroup DynamicScope"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+    <QuickLinkOptions allowSelf="true" created="1616589951057" id="0a111e5c785d172f8178644510511c5c">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58786117a98178642fe4342a10" name="ManageDisconnectedApplications DynamicScope"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="workflow" category="Manage Disconnected Application" created="1614931051676" id="0a111e5877c4191081780164449c29a4" messageKey="View Native Identity" modified="1615374902513" name="CF-View-Disconnetcted-Application">
+    <Attributes>
+      <Map>
+        <entry key="workflowName" value="CF-Workflow-View-DisconnectedApplication-NativeIdentity"/>
+      </Map>
+    </Attributes>
+    <QuickLinkOptions allowSelf="true" created="1615208852717" id="0a111e5c77a51bf3817811f32ced229e" modified="1615374902513">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5877c4191081781bd68b7a3d8c" name="Information Security Provisioning Workgroup DynamicScope"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+    <QuickLinkOptions allowSelf="true" created="1616589951057" id="0a111e5c785d172f8178644510511c5e">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58786117a98178642fe4342a10" name="ManageDisconnectedApplications DynamicScope"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+    <QuickLinkOptions allowSelf="true" created="1616590625336" id="0a111e5c785d172f8178644f5a381c77">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58754c15ea81754c4687380129" name="Everyone"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="workflow" category="Manage Disconnected Application" created="1614931111213" id="0a111e5877c41910817801652d2d29a6" messageKey="Delete Native Identity" modified="1615374895463" name="CF-Delete-Disconnetcted-Application">
+    <Attributes>
+      <Map>
+        <entry key="workflowName" value="CF-Workflow-Delete-DisconnectedApplication-NativeIdentity"/>
+      </Map>
+    </Attributes>
+    <QuickLinkOptions allowSelf="true" created="1615208852717" id="0a111e5c77a51bf3817811f32ced229f" modified="1615374895463">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5877c4191081781bd68b7a3d8c" name="Information Security Provisioning Workgroup DynamicScope"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+    <QuickLinkOptions allowSelf="true" created="1616589951057" id="0a111e5c785d172f8178644510511c5d">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58786117a98178642fe4342a10" name="ManageDisconnectedApplications DynamicScope"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="workflow" category="CareFirst" created="1606981701716" id="0a111e5a7623139d81762792d0540531" messageKey="Immediate Termination" modified="1611077519399" name="Custom QuickLink">
+    <Attributes>
+      <Map>
+        <entry key="workflowName" value="CareFirst-Workflow-ImmediateTermination"/>
+      </Map>
+    </Attributes>
+    <QuickLinkOptions allowSelf="true" created="1611047033884" id="0a111e587715164e817719e2dc1c07d4" modified="1611077519399">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58771a1be081771bb33ef102a5" name="COMKTWorkgroup DynamicScope"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="requestAccess" category="Access" created="1603889310020" cssClass="quicklink-request-access" id="0a111e5c756f1eb681756f40a9440010" messageKey="quicklink_request_access" name="Request Access">
+    <Attributes>
+      <Map>
+        <entry key="labelScript">
+          <value>
+            <Script>
+              <Source>
+                
+                  return (quickLinkWrapper.isAllowSelf() &amp;&amp; !quickLinkWrapper.isAllowOthers()) ? "quicklink_request_access_label_my_access" : "quicklink_request_access_label_user_access";
+                
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Description>quicklink_request_access_desc</Description>
+    <QuickLinkOptions allowBulk="true" created="1610462279703" id="0a111e5876d710858176f70838175d8c">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a933000f" name="Help Desk"/>
+      </DynamicScopeRef>
+      <Attributes>
+        <Map>
+          <entry key="allowRequestEntitlements" value="true"/>
+          <entry key="allowRequestEntitlementsAdditionalAccountRequests" value="false"/>
+          <entry key="allowRequestEntitlementsRemove" value="true"/>
+          <entry key="allowRequestEntitlementsShowPopulation" value="true"/>
+          <entry key="allowRequestRoles" value="true"/>
+          <entry key="allowRequestRolesAdditionalAccountRequests" value="false"/>
+          <entry key="allowRequestRolesRemove" value="true"/>
+          <entry key="allowRequestRolesShowPopulation" value="true"/>
+        </Map>
+      </Attributes>
+    </QuickLinkOptions>
+    <QuickLinkOptions allowSelf="true" created="1611173782347" id="0a111e58771a1be081772170e34b2225">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a91d000d" name="Self Service"/>
+      </DynamicScopeRef>
+      <Attributes>
+        <Map>
+          <entry key="allowRequestEntitlements">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestEntitlementsAdditionalAccountRequests">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestEntitlementsRemove">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestEntitlementsShowPopulation">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRoles">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRolesAdditionalAccountRequests">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRolesRemove">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRolesShowPopulation">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </QuickLinkOptions>
+    <QuickLinkOptions allowBulk="true" created="1614960832814" id="0a111e5c77a51bf38178032ab12e06ed">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a92b000e" name="Manager"/>
+      </DynamicScopeRef>
+      <Attributes>
+        <Map>
+          <entry key="allowRequestEntitlements">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestEntitlementsAdditionalAccountRequests">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestEntitlementsRemove">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestEntitlementsShowPopulation">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRoles">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRolesAdditionalAccountRequests">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRolesRemove">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRolesShowPopulation">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </QuickLinkOptions>
+    <QuickLinkOptions allowBulk="true" created="1616590625336" id="0a111e5c785d172f8178644f5a381c74">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58754c15ea81754c4687380129" name="Everyone"/>
+      </DynamicScopeRef>
+      <Attributes>
+        <Map>
+          <entry key="allowRequestEntitlements">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestEntitlementsAdditionalAccountRequests">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestEntitlementsRemove">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestEntitlementsShowPopulation">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRoles">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRolesAdditionalAccountRequests">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRolesRemove">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowRequestRolesShowPopulation">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="manageAccounts" category="Access" created="1603889310046" cssClass="quicklink-manage-accounts" id="0a111e5c756f1eb681756f40a95e0014" messageKey="quicklink_manage_accounts" name="Manage Accounts" ordering="1">
+    <Description>quicklink_manage_accounts_desc</Description>
+    <QuickLinkOptions allowOther="true" created="1610462279703" id="0a111e5876d710858176f70838175d8d">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a933000f" name="Help Desk"/>
+      </DynamicScopeRef>
+      <Attributes>
+        <Map>
+          <entry key="allowAccountOnlyRequests" value="false"/>
+          <entry key="allowManageAccountsAdditionalAccountRequests" value="false"/>
+          <entry key="allowManageExistingAccounts" value="true"/>
+        </Map>
+      </Attributes>
+    </QuickLinkOptions>
+    <QuickLinkOptions allowOther="true" allowSelf="true" created="1616590625336" id="0a111e5c785d172f8178644f5a381c76">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58754c15ea81754c4687380129" name="Everyone"/>
+      </DynamicScopeRef>
+      <Attributes>
+        <Map>
+          <entry key="allowAccountOnlyRequests">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+          <entry key="allowManageAccountsAdditionalAccountRequests">
+            <value>
+              <Boolean></Boolean>
+            </value>
+          </entry>
+          <entry key="allowManageExistingAccounts">
+            <value>
+              <Boolean>true</Boolean>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="managePasswords" category="Access" created="1603889310063" cssClass="quicklink-manage-passwords" id="0a111e5c756f1eb681756f40a96f0018" messageKey="quicklink_change_passwords" name="Manage Passwords" ordering="2">
+    <Description>quicklink_change_passwords_desc</Description>
+    <QuickLinkOptions allowOther="true" created="1610462279703" id="0a111e5876d710858176f70838175d8e">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a933000f" name="Help Desk"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="viewAccessRequests" category="Access" created="1603889310076" cssClass="quicklink-track-requests" id="0a111e5c756f1eb681756f40a97b001c" messageKey="quicklink_track_requests" name="Track Requests" ordering="3">
+    <Description>quicklink_track_requests_desc</Description>
+    <QuickLinkOptions allowSelf="true" created="1611173782347" id="0a111e58771a1be081772170e34b2226">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a91d000d" name="Self Service"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="createIdentity" category="Manage" created="1603889310086" cssClass="quicklink-create-identity" id="0a111e5c756f1eb681756f40a986001e" messageKey="quicklink_create_identity" name="Create Identity" ordering="5">
+    <Description>quicklink_create_identity_desc</Description>
+    <QuickLinkOptions allowOther="true" created="1610462279703" id="0a111e5876d710858176f70838175d8f">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a933000f" name="Help Desk"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="manageAttributes" category="Manage" created="1603889310102" cssClass="quicklink-edit-identity" id="0a111e5c756f1eb681756f40a9960021" messageKey="quicklink_edit_identity" name="Edit Identity" ordering="6">
+    <Description>quicklink_edit_identity_desc</Description>
+    <QuickLinkOptions allowOther="true" created="1610462279703" id="0a111e5876d710858176f70838175d90">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a933000f" name="Help Desk"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="manageWorkItems" category="Tasks" created="1603889310114" cssClass="quicklink-violation-reviews" id="0a111e5c756f1eb681756f40a9a20025" messageKey="quicklink_violation_reviews" name="Mobile Violation Reviews">
+    <Attributes>
+      <Map>
+        <entry key="displayText" value="true"/>
+        <entry key="textAriaLabel" value="quicklink_policy_violations_text_aria_label"/>
+        <entry key="textScript">
+          <value>
+            <Script>
+              <Source>
+                
+                    import sailpoint.object.QueryOptions;
+                    import sailpoint.object.Filter;
+                    import sailpoint.object.Identity;
+                    import sailpoint.object.WorkItem;
+                    import java.util.List;
+                    import java.util.ArrayList;
+
+                    QueryOptions qo = new QueryOptions();
+                    List filters = new ArrayList();
+
+                    filters.add(Filter.eq("owner", currentUser));
+
+                    if (currentUser.getWorkgroups() != null &amp;&amp; !currentUser.getWorkgroups().isEmpty())
+                    {
+                      filters.add(Filter.in("owner", currentUser.getWorkgroups()));
+                    }
+
+                    qo.addFilter(Filter.or(filters));
+                    qo.addFilter(Filter.eq("type", "ViolationReview"));
+                    int count = context.countObjects(WorkItem.class, qo);
+                    return count;
+                    
+              </Source>
+            </Script>
+          </value>
+        </entry>
+        <entry key="workItemType" value="ViolationReview"/>
+      </Map>
+    </Attributes>
+    <Description>quicklink_policy_violations_desc</Description>
+  </QuickLink>
+  <QuickLink action="viewIdentity" category="Manage" created="1603889310128" cssClass="quicklink-view-identity" id="0a111e5c756f1eb681756f40a9b00027" messageKey="quicklink_view_identity" name="View Identity" ordering="7">
+    <Description>quicklink_view_identity_desc</Description>
+    <QuickLinkOptions allowOther="true" created="1610462279703" id="0a111e5876d710858176f70838175d91">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a933000f" name="Help Desk"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+    <QuickLinkOptions allowSelf="true" created="1611173782347" id="0a111e58771a1be081772170e34b2227">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a91d000d" name="Self Service"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+    <QuickLinkOptions allowOther="true" allowSelf="true" created="1614960832814" id="0a111e5c77a51bf38178032ab12e06ee">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e5c756f1eb681756f40a92b000e" name="Manager"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+  <QuickLink action="workflow" category="CareFirst" created="1614670614226" id="0a111e5c77a51bf38177f1de4ed25cbf" messageKey="Request Something Else" name="Request Something Else" ordering="2">
+    <Attributes>
+      <Map>
+        <entry key="workflowName" value="CF-DisconnectedAPP-Workflow"/>
+      </Map>
+    </Attributes>
+    <QuickLinkOptions allowSelf="true" created="1616590625336" id="0a111e5c785d172f8178644f5a381c75">
+      <DynamicScopeRef>
+        <Reference class="sailpoint.object.DynamicScope" id="0a111e58754c15ea81754c4687380129" name="Everyone"/>
+      </DynamicScopeRef>
+    </QuickLinkOptions>
+  </QuickLink>
+</sailpoint>
