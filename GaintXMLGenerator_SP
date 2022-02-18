@@ -1,0 +1,99 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class GaintXMLGenerator_SP {
+               public static void main(String[] args) {     
+                              Scanner inputReader = new Scanner(System.in);
+                              
+                              System.out.println("Enter the source directory: ");
+                              String sourcePath=inputReader.nextLine();
+                              
+                              System.out.println("Enter the destination directory: ");
+                              String destPath=inputReader.nextLine();
+                              
+                              System.out.println("Enter the file name: ");
+                              String filename=inputReader.nextLine();
+                              
+                if(!(sourcePath.length()==0||destPath.length()==0||filename.length()==0)){
+               if(!(filename.contains("*")||filename.contains("<")||filename.contains(">")||filename.contains("|")
+                                                               ||filename.contains("?")||filename.contains("\"")||filename.contains("\\")||filename.contains("/")
+                                                               ||filename.contains(":"))){
+                                 
+                              File source = new File(sourcePath);
+                              File dest = new File(destPath);
+                              try {
+                              bundleFiles(source, dest, filename);
+
+                              } catch (IOException e) {
+                              e.printStackTrace();
+                              }
+                  }
+                                 else{
+                                                System.out.println("ERROR: File name is invalid. Please verify and try again!");
+                                 }
+               }
+                  else{
+                                 if(sourcePath.length()==0)
+                                 System.out.println("ERROR: The value for source directory is empty. Please try again!");
+                                 if(destPath.length()==0)
+                                                System.out.println("ERROR: The value for destination directory is empty. Please try again!");
+                                 if(filename.length()==0)
+                                                System.out.println("ERROR: The value for filename is empty. Please try again!");
+                  }
+                  }
+
+               static void bundleFiles(File source, File dest, String filename) throws IOException {
+                              if(source.list()!=null && dest.exists()){
+                                             System.out.println("Reading Directory - \"" + source.getName() + "\"");
+                              String[] files;
+                              FileWriter outFile = new FileWriter(dest+"\\"+filename+".xml");   
+                                                                                                                                                                     
+                              PrintWriter out = new PrintWriter(outFile);
+                              out.println("<?xml version='1.0' encoding='UTF-8'?>");
+                              out.println("<!DOCTYPE sailpoint PUBLIC 'sailpoint.dtd' 'sailpoint.dtd'>");
+                              out.println("<sailpoint>");
+                              try{                        
+                              files = source.list();
+                              System.out.println("\nThe following files were found at the source directory: ");
+                              for (int i = 0; i < files.length; i++) {
+                                             File fileobj;
+                                             fileobj = new File(source, files[i]);
+                                             if (!fileobj.isDirectory()) {
+                                                            System.out.println(files[i]);
+                                                            BufferedReader reader = new BufferedReader(new FileReader(fileobj));
+                                                            String line = reader.readLine();
+                                                            while (line != null) {
+                                                                           if (line.startsWith("<?xml")
+                                                                                                         || line.startsWith("<!DOCTYPE ")) {
+                                                                           } else {
+                                                                                          out.println(line);
+                                                                           }
+                                                                           line = reader.readLine();
+                                                            }
+                                                            reader.close();
+                                             }
+                              }
+                              out.println("</sailpoint>");
+                              out.close();
+                              System.out.println("\nThe files have been bundled into a single XML file.");
+               }
+               catch(IOException e){
+                              System.out.println("ERROR: Error while compiling and preparing final XML file: "+e);
+               }
+                              }
+               else{
+                              if(!source.exists()||source.list()==null)
+                                             System.out.println("ERROR: Either the source directory does not exist (or) there are no files in the source directory." +
+                                                                           " Please check and try again!");
+                              
+                              if(!dest.exists())
+                                             System.out.println("ERROR: Destination directory does not exist. Please check and try again!");
+                              }
+               }
+}
+
